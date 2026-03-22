@@ -1,0 +1,23 @@
+@import 'tailwindcss';
+
+body {
+  @apply bg-bs-black text-bs-text-primary font-sans;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: theme('colors.bs.black');
+}
+::-webkit-scrollbar-thumb {
+  background: theme('colors.bs.border-light');
+  border-radius: 3px;
+}
+
+/* Selection */
+::selection {
+  background: theme('colors.bs.gold');
+  color: theme('colors.bs.black');
+}
