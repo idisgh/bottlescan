@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
     public: {
       supabaseUrl: process.env.SUPABASE_URL,
+      kakaoJsKey: process.env.KAKAO_JS_KEY,
     },
   },
   supabase: {
@@ -25,6 +26,9 @@ export default defineNuxtConfig({
       ],
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+      ],
+      script: [
+        { src: 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js', defer: true },
       ],
     },
   },

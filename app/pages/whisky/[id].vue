@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const route = useRoute()
+const config = useRuntimeConfig()
 const { fetchWhisky, fetchReportsByWhisky } = useBottleScan()
 
 const whiskyId = route.params.id as string
@@ -26,6 +27,35 @@ const highestPrice = computed(() => {
 function formatPrice(price: number | null) {
   if (!price) return '-'
   return '₩' + price.toLocaleString('ko-KR')
+}
+
+function shareKakao() {
+  const kakao = (window as any).Kakao
+  if (!kakao) return
+
+  if (!kakao.isInitialized()) {
+    kakao.init(config.public.kakaoJsKey)
+  }
+
+  const url = window.location.href
+  const title = whisky.value?.name || 'BottleScan'
+  const desc = lowestPrice.value
+    ? `최저가 ${formatPrice(lowestPrice.value)} · ${reports.value?.length || 0}개 제보`
+    : '위스키 가격을 제보해보세요!'
+
+  kakao.Share.sendDefault({
+    objectType: 'feed',
+    content: {
+      title,
+      description: desc,
+      imageUrl: 'https://bottlescan.vercel.app/og-image.png',
+      link: { mobileWebUrl: url, webUrl: url },
+    },
+    buttons: [
+      { title: '가격 확인하기', link: { mobileWebUrl: url, webUrl: url } },
+      { title: '제보하기', link: { mobileWebUrl: 'https://bottlescan.vercel.app/report', webUrl: 'https://bottlescan.vercel.app/report' } },
+    ],
+  })
 }
 
 function timeAgo(dateStr: string) {
@@ -75,12 +105,24 @@ function timeAgo(dateStr: string) {
         </div>
       </div>
 
-      <NuxtLink
-        to="/report"
-        class="block w-full bg-bs-gold hover:bg-bs-gold-light text-bs-black font-semibold py-3.5 rounded-xl text-center transition-all mb-10"
-      >
-        Report a Price for This Whisky
-      </NuxtLink>
+      <div class="flex gap-3 mb-10">
+        <NuxtLink
+          to="/report"
+          class="flex-1 bg-bs-gold hover:bg-bs-gold-light text-bs-black font-semibold py-3.5 rounded-xl text-center transition-all"
+        >
+          가격 제보하기
+        </NuxtLink>
+        <button
+          class="flex items-center gap-2 px-5 bg-[#FEE500] hover:bg-[#fdd900] text-[#191919] font-semibold py-3.5 rounded-xl transition-all"
+          @click="shareKakao"
+        >
+          <!-- 카카오 아이콘 -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 3C6.48 3 2 6.69 2 11.25c0 2.91 1.87 5.47 4.69 6.97l-.95 3.47c-.08.29.23.52.48.36L10.1 19.7c.62.09 1.26.14 1.9.14 5.52 0 10-3.69 10-8.25S17.52 3 12 3z"/>
+          </svg>
+          공유
+        </button>
+      </div>
 
       <section v-if="reports?.length">
         <h2 class="font-serif text-xl font-bold text-white mb-5">Price by Store</h2>
