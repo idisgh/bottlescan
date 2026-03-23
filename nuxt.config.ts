@@ -3,6 +3,15 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   modules: ['@nuxtjs/tailwindcss', '@nuxtjs/google-fonts', '@nuxtjs/supabase'],
+  runtimeConfig: {
+    naverClientId: process.env.NAVER_CLIENT_ID,
+    naverClientSecret: process.env.NAVER_CLIENT_SECRET,
+    naverRedirectUri: process.env.NAVER_REDIRECT_URI,
+    supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    public: {
+      supabaseUrl: process.env.SUPABASE_URL,
+    },
+  },
   supabase: {
     redirect: false,
   },

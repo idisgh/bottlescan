@@ -91,6 +91,24 @@ async function handleSubmit() {
       </button>
     </form>
 
+    <!-- 구분선 -->
+    <div class="flex items-center gap-3 my-6">
+      <div class="flex-1 h-px bg-bs-border"></div>
+      <span class="text-bs-text-tertiary text-xs">또는</span>
+      <div class="flex-1 h-px bg-bs-border"></div>
+    </div>
+
+    <!-- 네이버 로그인 -->
+    <a
+      href="/api/auth/naver"
+      class="flex items-center justify-center gap-3 w-full bg-[#03C75A] hover:bg-[#02b351] text-white font-semibold py-3.5 rounded-xl transition-all"
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M16.273 12.845L7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727z"/>
+      </svg>
+      네이버로 로그인
+    </a>
+
     <p class="text-center text-bs-text-tertiary text-sm mt-6">
       {{ isSignUp ? 'Already have an account?' : "Don't have an account?" }}
       <button class="text-bs-gold hover:underline ml-1" @click="isSignUp = !isSignUp; errorMsg = ''; successMsg = ''">
