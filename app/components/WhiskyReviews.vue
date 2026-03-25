@@ -110,10 +110,23 @@ const ratingPercent = (star: number) => reviews.value.length ? (ratingCount(star
 async function fetchReviews() {
   const { data } = await client
     .from('reviews')
-    .select('*, profiles(nickname)')
+    .select('*')
     .eq('whisky_id', props.whiskyId)
     .order('created_at', { ascending: false })
-  reviews.value = data || []
+
+  const userIds = [...new Set((data || []).map((r: any) => r.user_id))]
+  let profileMap: Record<string, string> = {}
+  if (userIds.length) {
+    const { data: profiles } = await client
+      .from('profiles')
+      .select('id, nickname')
+      .in('id', userIds)
+    profileMap = Object.fromEntries((profiles || []).map((p: any) => [p.id, p.nickname]))
+  }
+  reviews.value = (data || []).map((r: any) => ({
+    ...r,
+    profiles: { nickname: profileMap[r.user_id] || 'User' },
+  }))
 
   if (user.value) {
     myReview.value = reviews.value.find(r => r.user_id === user.value!.id) || null

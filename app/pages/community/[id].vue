@@ -13,10 +13,17 @@ const liked = ref(false)
 async function fetchPost() {
   const { data } = await client
     .from('posts')
-    .select('*, profiles(nickname)')
+    .select('*')
     .eq('id', postId)
     .single()
-  post.value = data
+  if (data) {
+    const { data: profile } = await client
+      .from('profiles')
+      .select('nickname')
+      .eq('id', data.user_id)
+      .single()
+    post.value = { ...data, profiles: profile }
+  }
 
   if (user.value && data) {
     const { data: like } = await client
@@ -32,10 +39,23 @@ async function fetchPost() {
 async function fetchComments() {
   const { data } = await client
     .from('comments')
-    .select('*, profiles(nickname)')
+    .select('*')
     .eq('post_id', postId)
     .order('created_at', { ascending: true })
-  comments.value = data || []
+
+  const userIds = [...new Set((data || []).map((c: any) => c.user_id))]
+  let profileMap: Record<string, string> = {}
+  if (userIds.length) {
+    const { data: profiles } = await client
+      .from('profiles')
+      .select('id, nickname')
+      .in('id', userIds)
+    profileMap = Object.fromEntries((profiles || []).map((p: any) => [p.id, p.nickname]))
+  }
+  comments.value = (data || []).map((c: any) => ({
+    ...c,
+    profiles: { nickname: profileMap[c.user_id] || 'User' },
+  }))
 }
 
 async function submitComment() {

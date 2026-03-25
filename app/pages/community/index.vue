@@ -22,11 +22,27 @@ const filteredPosts = computed(() =>
 
 async function fetchPosts() {
   isLoading.value = true
-  const { data } = await client
+  const { data, error } = await client
     .from('posts')
-    .select('*, profiles(nickname)')
+    .select('*')
     .order('created_at', { ascending: false })
-  posts.value = data || []
+  if (error) console.error('fetchPosts error:', error)
+
+  // profiles 별도 조회
+  const userIds = [...new Set((data || []).map((p: any) => p.user_id))]
+  let profileMap: Record<string, string> = {}
+  if (userIds.length) {
+    const { data: profiles } = await client
+      .from('profiles')
+      .select('id, nickname')
+      .in('id', userIds)
+    profileMap = Object.fromEntries((profiles || []).map((p: any) => [p.id, p.nickname]))
+  }
+
+  posts.value = (data || []).map((p: any) => ({
+    ...p,
+    profiles: { nickname: profileMap[p.user_id] || 'User' },
+  }))
   isLoading.value = false
 }
 
