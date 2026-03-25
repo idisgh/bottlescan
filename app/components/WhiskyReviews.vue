@@ -128,8 +128,9 @@ async function fetchReviews() {
     profiles: { nickname: profileMap[r.user_id] || 'User' },
   }))
 
-  if (user.value) {
-    myReview.value = reviews.value.find(r => r.user_id === user.value!.id) || null
+  const { data: { user: sessionUser } } = await client.auth.getUser()
+  if (sessionUser) {
+    myReview.value = reviews.value.find(r => r.user_id === sessionUser.id) || null
     if (myReview.value) {
       form.value = { rating: myReview.value.rating, content: myReview.value.content || '' }
     }
