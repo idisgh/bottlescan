@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@nuxtjs/tailwindcss', '@nuxtjs/google-fonts', '@nuxtjs/supabase'],
+  modules: ['@nuxtjs/tailwindcss', '@nuxtjs/google-fonts', '@nuxtjs/supabase', '@vite-pwa/nuxt'],
   runtimeConfig: {
     naverClientId: process.env.NAVER_CLIENT_ID,
     naverClientSecret: process.env.NAVER_CLIENT_SECRET,
@@ -17,6 +17,59 @@ export default defineNuxtConfig({
     redirect: false,
   },
   devServer: { port: 3020 },
+  pwa: {
+    registerType: 'autoUpdate',
+    manifest: {
+      name: 'BottleScan — 위스키 가격 트래커',
+      short_name: 'BottleScan',
+      description: '위스키 가격을 제보하고, 최저가 매장을 찾아보세요.',
+      theme_color: '#0D0D0D',
+      background_color: '#141414',
+      display: 'standalone',
+      orientation: 'portrait',
+      scope: '/',
+      start_url: '/',
+      icons: [
+        {
+          src: '/pwa-192x192.png',
+          sizes: '192x192',
+          type: 'image/png',
+        },
+        {
+          src: '/pwa-512x512.png',
+          sizes: '512x512',
+          type: 'image/png',
+        },
+        {
+          src: '/pwa-512x512.png',
+          sizes: '512x512',
+          type: 'image/png',
+          purpose: 'maskable',
+        },
+      ],
+    },
+    workbox: {
+      navigateFallback: '/',
+      globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+      runtimeCaching: [
+        {
+          urlPattern: /^https:\/\/.*\.supabase\.co\/.*/i,
+          handler: 'NetworkFirst',
+          options: {
+            cacheName: 'supabase-cache',
+            expiration: { maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 },
+          },
+        },
+      ],
+    },
+    client: {
+      installPrompt: true,
+    },
+    devOptions: {
+      enabled: true,
+      type: 'module',
+    },
+  },
   app: {
     head: {
       title: 'BottleScan — 위스키 가격 트래커',

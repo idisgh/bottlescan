@@ -5,5 +5,6 @@
       <NuxtPage />
     </div>
     <AppFooter />
+    <PwaInstallBanner />
   </div>
 </template>
