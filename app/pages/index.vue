@@ -89,7 +89,7 @@ function getLowestPrice(whiskyId: string) {
     </section>
 
     <!-- Search -->
-    <section class="mb-10 relative">
+    <section class="mb-10 relative" v-click-outside="() => showSearchResults = false">
       <SearchBar v-model="searchQuery" @search="onSearch" />
 
       <div

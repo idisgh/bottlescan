@@ -115,39 +115,39 @@ function resetForm() {
       Back
     </NuxtLink>
 
-    <h1 class="font-serif text-2xl sm:text-3xl font-bold text-white mb-2">Report a Price</h1>
-    <p class="text-bs-text-tertiary mb-8">Share what you found — help the community find better deals.</p>
+    <h1 class="font-serif text-2xl sm:text-3xl font-bold text-white mb-2">가격 제보하기</h1>
+    <p class="text-bs-text-tertiary mb-8">발견한 가격을 공유해서 커뮤니티를 도와주세요.</p>
 
     <!-- Not logged in -->
     <div v-if="!user" class="bg-bs-card border border-bs-border rounded-xl p-8 text-center">
       <LLock class="w-8 h-8 text-bs-text-tertiary mb-3" />
-      <p class="text-white font-medium mb-2">Sign in required</p>
-      <p class="text-bs-text-tertiary text-sm mb-6">You need to be signed in to submit a price report.</p>
+      <p class="text-white font-medium mb-2">로그인이 필요해요</p>
+      <p class="text-bs-text-tertiary text-sm mb-6">가격 제보는 로그인 후 이용할 수 있어요.</p>
       <NuxtLink
         to="/login"
         class="inline-block bg-bs-gold hover:bg-bs-gold-light text-bs-black font-semibold px-6 py-2.5 rounded-lg transition-all text-sm"
       >
-        Sign In
+        로그인
       </NuxtLink>
     </div>
 
     <!-- Success -->
     <div v-else-if="submitted" class="text-center py-20">
       <LCheckCircle class="w-14 h-14 text-bs-green mb-5" />
-      <h2 class="font-serif text-2xl font-bold text-white mb-2">Report Submitted!</h2>
-      <p class="text-bs-text-secondary mb-8">Thanks for contributing to the community.</p>
+      <h2 class="font-serif text-2xl font-bold text-white mb-2">제보 완료!</h2>
+      <p class="text-bs-text-secondary mb-8">커뮤니티에 기여해주셔서 감사해요 🥃</p>
       <div class="flex gap-3 justify-center">
         <button
           class="bg-bs-gold hover:bg-bs-gold-light text-bs-black font-semibold px-6 py-3 rounded-xl transition-all"
           @click="resetForm"
         >
-          Submit Another
+          추가 제보
         </button>
         <NuxtLink
           to="/"
           class="border border-bs-border-light text-bs-text-secondary hover:text-white hover:border-bs-gold/50 font-medium px-6 py-3 rounded-xl transition-all"
         >
-          Dashboard
+          홈으로
         </NuxtLink>
       </div>
     </div>
@@ -161,11 +161,11 @@ function resetForm() {
 
       <!-- Whisky -->
       <div class="relative">
-        <label class="block text-xs font-semibold tracking-wider text-bs-text-secondary uppercase mb-2">Whisky *</label>
+        <label class="block text-xs font-semibold tracking-wider text-bs-text-secondary uppercase mb-2">위스키 *</label>
         <input
           v-model="whiskyQuery"
           type="text"
-          placeholder="Search whisky name..."
+          placeholder="위스키 이름 검색..."
           class="w-full bg-bs-card border border-bs-border rounded-xl px-4 py-3.5 text-white placeholder:text-bs-text-tertiary focus:outline-none focus:border-bs-gold/50 focus:ring-1 focus:ring-bs-gold/20 transition-all"
           @focus="showWhiskyDropdown = true"
           @input="onWhiskySearch"
@@ -194,7 +194,7 @@ function resetForm() {
 
       <!-- Price -->
       <div>
-        <label class="block text-xs font-semibold tracking-wider text-bs-text-secondary uppercase mb-2">Price (₩) *</label>
+        <label class="block text-xs font-semibold tracking-wider text-bs-text-secondary uppercase mb-2">가격 (₩) *</label>
         <input
           v-model.number="price"
           type="number"
@@ -207,11 +207,11 @@ function resetForm() {
 
       <!-- Store -->
       <div class="relative">
-        <label class="block text-xs font-semibold tracking-wider text-bs-text-secondary uppercase mb-2">Store *</label>
+        <label class="block text-xs font-semibold tracking-wider text-bs-text-secondary uppercase mb-2">매장 *</label>
         <input
           v-model="storeQuery"
           type="text"
-          placeholder="Search store..."
+          placeholder="매장 이름 검색..."
           class="w-full bg-bs-card border border-bs-border rounded-xl px-4 py-3.5 text-white placeholder:text-bs-text-tertiary focus:outline-none focus:border-bs-gold/50 focus:ring-1 focus:ring-bs-gold/20 transition-all"
           @focus="showStoreDropdown = true"
           @input="onStoreSearch"
@@ -240,10 +240,10 @@ function resetForm() {
 
       <!-- Note -->
       <div>
-        <label class="block text-xs font-semibold tracking-wider text-bs-text-secondary uppercase mb-2">Note (Optional)</label>
+        <label class="block text-xs font-semibold tracking-wider text-bs-text-secondary uppercase mb-2">메모 (선택)</label>
         <textarea
           v-model="note"
-          placeholder="Limited stock, on sale, etc."
+          placeholder="재고 한정, 세일 중 등 추가 정보..."
           rows="2"
           class="w-full bg-bs-card border border-bs-border rounded-xl px-4 py-3.5 text-white placeholder:text-bs-text-tertiary focus:outline-none focus:border-bs-gold/50 focus:ring-1 focus:ring-bs-gold/20 transition-all resize-none"
         />
@@ -255,7 +255,7 @@ function resetForm() {
         :disabled="!selectedWhisky || !selectedStore || !price || submitting"
         class="w-full bg-bs-gold hover:bg-bs-gold-light disabled:bg-bs-border disabled:text-bs-text-tertiary text-bs-black font-semibold py-3.5 rounded-xl transition-all"
       >
-        {{ submitting ? 'Submitting...' : 'Submit Report' }}
+        {{ submitting ? '제보 중...' : '제보하기' }}
       </button>
     </form>
   </main>
