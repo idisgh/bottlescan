@@ -250,6 +250,9 @@ function timeAgo(dateStr: string) {
         <LInbox class="w-8 h-8 text-bs-text-tertiary mb-2 mx-auto" />
         <p>No price reports yet. Be the first!</p>
       </div>
+
+      <!-- 리뷰 섹션 -->
+      <WhiskyReviews :whisky-id="whiskyId" />
     </template>
 
     <div v-else class="text-center text-bs-text-tertiary py-24">

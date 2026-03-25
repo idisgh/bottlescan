@@ -6,6 +6,7 @@ const client = useSupabaseClient()
 const navItems = [
   { label: 'Dashboard', to: '/' },
   { label: '매장 찾기', to: '/stores' },
+  { label: '커뮤니티', to: '/community' },
 ]
 
 async function signOut() {
