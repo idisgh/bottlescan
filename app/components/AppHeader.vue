@@ -76,7 +76,7 @@ function onClickOutside() { showUserMenu.value = false }
               {{ nickname.charAt(0) || 'U' }}
             </div>
             <span class="hidden sm:block text-sm text-bs-text-secondary">{{ nickname }}</span>
-            <span class="text-bs-text-tertiary text-xs">▾</span>
+            <svg class="w-3 h-3 text-bs-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </button>
 
           <Transition name="dropdown">
