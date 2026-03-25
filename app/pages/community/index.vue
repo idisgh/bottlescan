@@ -50,8 +50,12 @@ async function submitPost() {
   if (!form.value.title.trim() || !form.value.content.trim() || !user.value) return
   isSubmitting.value = true
   try {
+    // 현재 세션 유저 확인
+    const { data: { user: sessionUser } } = await client.auth.getUser()
+    console.log('session user:', sessionUser?.id, 'user.value:', user.value?.id)
+
     const { error } = await client.from('posts').insert({
-      user_id: user.value.id,
+      user_id: sessionUser?.id || user.value.id,
       title: form.value.title,
       content: form.value.content,
       category: form.value.category,
