@@ -34,12 +34,17 @@ async function submitPost() {
   if (!form.value.title.trim() || !form.value.content.trim() || !user.value) return
   isSubmitting.value = true
   try {
-    await client.from('posts').insert({
+    const { error } = await client.from('posts').insert({
       user_id: user.value.id,
       title: form.value.title,
       content: form.value.content,
       category: form.value.category,
     })
+    if (error) {
+      console.error('posts insert error:', error)
+      alert('등록 실패: ' + error.message)
+      return
+    }
     form.value = { title: '', content: '', category: '자유' }
     showWriteForm.value = false
     await fetchPosts()
