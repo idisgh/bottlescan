@@ -44,7 +44,21 @@ export function useBottleScan() {
       .order('created_at', { ascending: false })
       .limit(limit)
     if (error) console.error('fetchReports:', error)
-    return data || []
+
+    // profiles 별도 조회
+    const userIds = [...new Set((data || []).map((r: any) => r.user_id))]
+    let profileMap: Record<string, string> = {}
+    if (userIds.length) {
+      const { data: profiles } = await client
+        .from('profiles')
+        .select('id, nickname')
+        .in('id', userIds)
+      profileMap = Object.fromEntries((profiles || []).map((p: any) => [p.id, p.nickname]))
+    }
+    return (data || []).map((r: any) => ({
+      ...r,
+      profiles: { nickname: profileMap[r.user_id] || 'User' },
+    }))
   }
 
   // 위스키별 제보
@@ -55,7 +69,20 @@ export function useBottleScan() {
       .eq('whiskey_id', whiskyId)
       .order('price', { ascending: true })
     if (error) console.error('fetchReportsByWhisky:', error)
-    return data || []
+
+    const userIds = [...new Set((data || []).map((r: any) => r.user_id))]
+    let profileMap: Record<string, string> = {}
+    if (userIds.length) {
+      const { data: profiles } = await client
+        .from('profiles')
+        .select('id, nickname')
+        .in('id', userIds)
+      profileMap = Object.fromEntries((profiles || []).map((p: any) => [p.id, p.nickname]))
+    }
+    return (data || []).map((r: any) => ({
+      ...r,
+      profiles: { nickname: profileMap[r.user_id] || 'User' },
+    }))
   }
 
   // 위스키 검색
