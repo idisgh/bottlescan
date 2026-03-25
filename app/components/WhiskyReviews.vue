@@ -137,14 +137,15 @@ async function fetchReviews() {
 }
 
 async function submitReview() {
-  if (!form.value.rating || !user.value) return
+  if (!form.value.rating) return
+  const { data: { user: sessionUser } } = await client.auth.getUser()
+  if (!sessionUser) { navigateTo('/login'); return }
   isSubmitting.value = true
   try {
-    if (myReview.value) {
-      await client.from('reviews').update({ rating: form.value.rating, content: form.value.content }).eq('id', myReview.value.id)
-    } else {
-      await client.from('reviews').insert({ whisky_id: props.whiskyId, user_id: user.value.id, rating: form.value.rating, content: form.value.content })
-    }
+    const { error } = myReview.value
+      ? await client.from('reviews').update({ rating: form.value.rating, content: form.value.content }).eq('id', myReview.value.id)
+      : await client.from('reviews').insert({ whisky_id: props.whiskyId, user_id: sessionUser.id, rating: form.value.rating, content: form.value.content })
+    if (error) { console.error('review error:', error); return }
     await fetchReviews()
   } finally {
     isSubmitting.value = false
