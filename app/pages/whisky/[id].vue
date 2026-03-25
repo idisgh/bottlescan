@@ -192,7 +192,7 @@ function timeAgo(dateStr: string) {
           @click="toggleAlert"
         >
           <span v-if="isAlertLoading" class="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-          <span v-else>{{ isAlertSubscribed ? '🔔' : '🔕' }}</span>
+          <span v-else class="text-sm">{{ isAlertSubscribed ? '●' : '○' }}</span>
           <span class="text-sm">{{ isAlertSubscribed ? '알림 ON' : '알림' }}</span>
         </button>
         <button

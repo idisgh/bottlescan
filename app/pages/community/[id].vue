@@ -156,8 +156,7 @@ onMounted(async () => {
             :class="liked ? 'bg-red-500/10 border-red-500/30 text-red-400' : 'border-bs-border text-bs-text-tertiary hover:border-bs-border-light'"
             @click="toggleLike"
           >
-            <span>❤️</span>
-            <span>{{ post.likes || 0 }}</span>
+            <span>좋아요 {{ post.likes || 0 }}</span>
           </button>
           <span class="text-xs text-bs-text-tertiary">댓글 {{ comments.length }}</span>
         </div>

@@ -135,7 +135,7 @@ function resetForm() {
     <div v-else-if="submitted" class="text-center py-20">
       <LCheckCircle class="w-14 h-14 text-bs-green mb-5" />
       <h2 class="font-serif text-2xl font-bold text-white mb-2">제보 완료!</h2>
-      <p class="text-bs-text-secondary mb-8">커뮤니티에 기여해주셔서 감사해요 🥃</p>
+      <p class="text-bs-text-secondary mb-8">커뮤니티에 기여해주셔서 감사해요.</p>
       <div class="flex gap-3 justify-center">
         <button
           class="bg-bs-gold hover:bg-bs-gold-light text-bs-black font-semibold px-6 py-3 rounded-xl transition-all"

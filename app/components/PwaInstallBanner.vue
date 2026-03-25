@@ -5,7 +5,7 @@
       class="fixed bottom-4 left-4 right-4 z-50 mx-auto max-w-sm"
     >
       <div class="bg-bs-card border border-bs-gold/30 rounded-xl p-4 shadow-2xl flex items-center gap-3">
-        <span class="text-3xl">🥃</span>
+        <div class="w-10 h-10 rounded-xl bg-bs-gold/20 flex items-center justify-center text-bs-gold font-logo text-lg">B</div>
         <div class="flex-1 min-w-0">
           <p class="text-bs-text-primary text-sm font-semibold">앱으로 설치하기</p>
           <p class="text-bs-text-secondary text-xs mt-0.5">홈 화면에 추가하면 더 빠르게 접근할 수 있어요</p>

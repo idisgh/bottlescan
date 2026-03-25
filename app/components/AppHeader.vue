@@ -89,20 +89,20 @@ function onClickOutside() { showUserMenu.value = false }
                 class="flex items-center gap-2 px-4 py-3 text-sm text-bs-text-secondary hover:text-white hover:bg-bs-card-hover transition-colors"
                 @click="showUserMenu = false"
               >
-                👤 내 프로필
+                내 프로필
               </NuxtLink>
               <NuxtLink
                 to="/report"
                 class="flex items-center gap-2 px-4 py-3 text-sm text-bs-text-secondary hover:text-white hover:bg-bs-card-hover transition-colors border-t border-bs-border"
                 @click="showUserMenu = false"
               >
-                📝 가격 제보
+                가격 제보
               </NuxtLink>
               <button
                 class="w-full flex items-center gap-2 px-4 py-3 text-sm text-red-400 hover:text-red-300 hover:bg-bs-card-hover transition-colors border-t border-bs-border"
                 @click="signOut"
               >
-                🚪 로그아웃
+                로그아웃
               </button>
             </div>
           </Transition>

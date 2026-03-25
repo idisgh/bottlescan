@@ -119,7 +119,7 @@ onMounted(fetchPosts)
         class="bg-bs-gold hover:bg-bs-gold-light text-bs-black font-semibold px-5 py-2.5 rounded-xl text-sm transition-all"
         @click="showWriteForm = !showWriteForm"
       >
-        {{ showWriteForm ? '취소' : '✏️ 글쓰기' }}
+        {{ showWriteForm ? '취소' : '글쓰기' }}
       </button>
       <NuxtLink v-else to="/login" class="text-bs-gold text-sm hover:underline">로그인</NuxtLink>
     </div>
@@ -200,13 +200,12 @@ onMounted(fetchPosts)
             <span>{{ post.profiles?.nickname || 'User' }}</span>
           </div>
           <span>{{ timeAgo(post.created_at) }}</span>
-          <span class="ml-auto flex items-center gap-1">❤️ {{ post.likes || 0 }}</span>
+          <span class="ml-auto text-bs-text-tertiary">좋아요 {{ post.likes || 0 }}</span>
         </div>
       </NuxtLink>
     </div>
 
     <div v-else class="text-center text-bs-text-tertiary py-16">
-      <p class="text-4xl mb-3">🥃</p>
       <p class="font-serif text-lg text-white">아직 게시글이 없어요</p>
       <p class="text-sm mt-1">첫 번째 이야기를 시작해보세요!</p>
     </div>

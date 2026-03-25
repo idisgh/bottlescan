@@ -61,8 +61,7 @@ async function submit() {
   <main class="min-h-screen flex items-center justify-center px-4">
     <div class="w-full max-w-sm">
       <div class="text-center mb-8">
-        <span class="text-5xl">🥃</span>
-        <h1 class="font-serif text-2xl font-bold text-white mt-4">닉네임을 설정해주세요</h1>
+        <h1 class="font-serif text-2xl font-bold text-white">닉네임을 설정해주세요</h1>
         <p class="text-bs-text-secondary text-sm mt-2">커뮤니티에서 사용할 이름이에요</p>
       </div>
 
