@@ -25,12 +25,13 @@ async function fetchPost() {
     post.value = { ...data, profiles: profile }
   }
 
-  if (user.value && data) {
+  const { data: { user: sessionUser } } = await client.auth.getUser()
+  if (sessionUser) {
     const { data: like } = await client
       .from('post_likes')
       .select('id')
       .eq('post_id', postId)
-      .eq('user_id', user.value.id)
+      .eq('user_id', sessionUser.id)
       .single()
     liked.value = !!like
   }
@@ -59,12 +60,14 @@ async function fetchComments() {
 }
 
 async function submitComment() {
-  if (!commentText.value.trim() || !user.value) return
+  if (!commentText.value.trim()) return
+  const { data: { user: sessionUser } } = await client.auth.getUser()
+  if (!sessionUser) { navigateTo('/login'); return }
   isSubmitting.value = true
   try {
     await client.from('comments').insert({
       post_id: postId,
-      user_id: user.value.id,
+      user_id: sessionUser.id,
       content: commentText.value.trim(),
     })
     commentText.value = ''
@@ -80,13 +83,14 @@ async function deleteComment(commentId: string) {
 }
 
 async function toggleLike() {
-  if (!user.value) { navigateTo('/login'); return }
+  const { data: { user: sessionUser } } = await client.auth.getUser()
+  if (!sessionUser) { navigateTo('/login'); return }
   if (liked.value) {
-    await client.from('post_likes').delete().eq('post_id', postId).eq('user_id', user.value.id)
+    await client.from('post_likes').delete().eq('post_id', postId).eq('user_id', sessionUser.id)
     post.value.likes = Math.max(0, post.value.likes - 1)
     liked.value = false
   } else {
-    await client.from('post_likes').insert({ post_id: postId, user_id: user.value.id })
+    await client.from('post_likes').insert({ post_id: postId, user_id: sessionUser.id })
     post.value.likes = (post.value.likes || 0) + 1
     liked.value = true
   }
@@ -110,7 +114,10 @@ function timeAgo(dateStr: string) {
 
 useHead(() => ({ title: post.value ? `${post.value.title} — BottleScan` : 'BottleScan' }))
 
-onMounted(() => { fetchPost(); fetchComments() })
+onMounted(async () => {
+  await fetchPost()
+  await fetchComments()
+})
 </script>
 
 <template>
