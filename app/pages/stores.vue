@@ -43,10 +43,9 @@ function loadKakaoMap() {
     }
 
     const script = document.createElement('script')
-    // autoload=true (기본값) — 스크립트 로드 완료 시점에 바로 사용 가능
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${config.public.kakaoJsKey}&libraries=services`
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${config.public.kakaoJsKey}&libraries=services&autoload=false`
     script.onload = () => {
-      nextTick(() => {
+      ;(window as any).kakao.maps.load(() => {
         initMap()
         resolve()
       })
