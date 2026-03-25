@@ -156,12 +156,12 @@ export function useBottleScan() {
     return data || []
   }
 
-  // 전체 매장 목록 (제보 폼용)
+  // 전체 매장 목록
   const fetchAllStores = async () => {
     const { data, error } = await client
       .from('stores')
-      .select('*')
-      .order('name')
+      .select('id, name, address, region, sub_region, lat, lng')
+      .order('region')
     if (error) console.error('fetchAllStores:', error)
     return data || []
   }
