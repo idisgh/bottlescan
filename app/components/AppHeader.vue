@@ -13,12 +13,18 @@ const showUserMenu = ref(false)
 const showMobileMenu = ref(false)
 const nickname = ref('')
 
-watch(user, async (u) => {
+async function loadNickname() {
+  const { data: { user: u } } = await client.auth.getUser()
   if (u) {
     const { data } = await client.from('profiles').select('nickname').eq('id', u.id).single()
     nickname.value = data?.nickname || 'User'
   }
-}, { immediate: true })
+}
+
+onMounted(loadNickname)
+
+// 라우트 이동 시 재조회 (닉네임 변경 후 바로 반영)
+watch(() => useRoute().path, loadNickname)
 
 async function signOut() {
   await client.auth.signOut()
