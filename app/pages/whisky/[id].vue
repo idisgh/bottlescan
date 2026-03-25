@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const route = useRoute()
 const config = useRuntimeConfig()
+const supabase = useSupabaseClient()
 const { fetchWhisky, fetchReportsByWhisky } = useBottleScan()
 
 const whiskyId = route.params.id as string
@@ -58,6 +59,75 @@ function shareKakao() {
   })
 }
 
+// ── 입고 알림 ──────────────────────────────────────────
+const isAlertSubscribed = ref(false)
+const isAlertLoading = ref(false)
+const pushPermission = ref<NotificationPermission>('default')
+
+onMounted(async () => {
+  if (typeof Notification !== 'undefined') {
+    pushPermission.value = Notification.permission
+  }
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return
+  const { subscribed } = await $fetch<{ subscribed: boolean }>(
+    `/api/alerts/status?userId=${user.id}&whiskyId=${whiskyId}`
+  )
+  isAlertSubscribed.value = subscribed
+})
+
+async function toggleAlert() {
+  isAlertLoading.value = true
+  try {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) { navigateTo('/login'); return }
+
+    // 푸시 권한 요청
+    if (Notification.permission !== 'granted') {
+      const perm = await Notification.requestPermission()
+      pushPermission.value = perm
+      if (perm !== 'granted') return
+    }
+
+    // Service Worker 구독 등록
+    const reg = await navigator.serviceWorker.ready
+    let pushSub = await reg.pushManager.getSubscription()
+    if (!pushSub) {
+      pushSub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(config.public.vapidPublicKey),
+      })
+    }
+    const subJson = pushSub.toJSON()
+    await $fetch('/api/push/subscribe', {
+      method: 'POST',
+      body: {
+        userId: user.id,
+        endpoint: subJson.endpoint,
+        p256dh: subJson.keys?.p256dh,
+        auth: subJson.keys?.auth,
+      },
+    })
+
+    // 알림 토글
+    const { subscribed } = await $fetch<{ subscribed: boolean }>('/api/alerts', {
+      method: 'POST',
+      body: { userId: user.id, whiskyId },
+    })
+    isAlertSubscribed.value = subscribed
+  } finally {
+    isAlertLoading.value = false
+  }
+}
+
+function urlBase64ToUint8Array(base64String: string) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4)
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/')
+  const rawData = atob(base64)
+  return Uint8Array.from([...rawData].map(c => c.charCodeAt(0)))
+}
+// ────────────────────────────────────────────────────────
+
 function timeAgo(dateStr: string) {
   const diff = Date.now() - new Date(dateStr).getTime()
   const mins = Math.floor(diff / 60000)
@@ -112,11 +182,23 @@ function timeAgo(dateStr: string) {
         >
           가격 제보하기
         </NuxtLink>
+        <!-- 입고 알림 버튼 -->
         <button
-          class="flex items-center gap-2 px-5 bg-[#FEE500] hover:bg-[#fdd900] text-[#191919] font-semibold py-3.5 rounded-xl transition-all"
+          class="flex items-center gap-2 px-4 border rounded-xl font-semibold py-3.5 transition-all"
+          :class="isAlertSubscribed
+            ? 'bg-bs-gold/10 border-bs-gold/50 text-bs-gold'
+            : 'bg-bs-card border-bs-border text-bs-text-secondary hover:border-bs-gold/30 hover:text-bs-text-primary'"
+          :disabled="isAlertLoading"
+          @click="toggleAlert"
+        >
+          <span v-if="isAlertLoading" class="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+          <span v-else>{{ isAlertSubscribed ? '🔔' : '🔕' }}</span>
+          <span class="text-sm">{{ isAlertSubscribed ? '알림 ON' : '알림' }}</span>
+        </button>
+        <button
+          class="flex items-center gap-2 px-4 bg-[#FEE500] hover:bg-[#fdd900] text-[#191919] font-semibold py-3.5 rounded-xl transition-all"
           @click="shareKakao"
         >
-          <!-- 카카오 아이콘 -->
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 3C6.48 3 2 6.69 2 11.25c0 2.91 1.87 5.47 4.69 6.97l-.95 3.47c-.08.29.23.52.48.36L10.1 19.7c.62.09 1.26.14 1.9.14 5.52 0 10-3.69 10-8.25S17.52 3 12 3z"/>
           </svg>

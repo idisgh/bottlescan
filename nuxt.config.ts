@@ -8,9 +8,13 @@ export default defineNuxtConfig({
     naverClientSecret: process.env.NAVER_CLIENT_SECRET,
     naverRedirectUri: process.env.NAVER_REDIRECT_URI,
     supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    vapidPublicKey: process.env.VAPID_PUBLIC_KEY,
+    vapidPrivateKey: process.env.VAPID_PRIVATE_KEY,
+    vapidEmail: process.env.VAPID_EMAIL,
     public: {
       supabaseUrl: process.env.SUPABASE_URL,
       kakaoJsKey: process.env.KAKAO_JS_KEY,
+      vapidPublicKey: process.env.VAPID_PUBLIC_KEY,
     },
   },
   supabase: {
@@ -51,6 +55,7 @@ export default defineNuxtConfig({
     workbox: {
       navigateFallback: '/',
       globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+      importScripts: ['/sw-push.js'],
       runtimeCaching: [
         {
           urlPattern: /^https:\/\/.*\.supabase\.co\/.*/i,
