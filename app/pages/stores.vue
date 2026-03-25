@@ -35,18 +35,29 @@ onMounted(async () => {
 
 function loadKakaoMap() {
   return new Promise<void>((resolve) => {
-    if ((window as any).kakao?.maps) {
+    const kakao = (window as any).kakao
+    if (kakao?.maps?.Map) {
       initMap()
       resolve()
       return
     }
+
+    // 이미 스크립트 로딩 중인 경우
+    if (kakao?.maps && !kakao.maps.Map) {
+      kakao.maps.load(() => { initMap(); resolve() })
+      return
+    }
+
     const script = document.createElement('script')
     script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${config.public.kakaoJsKey}&libraries=services&autoload=false`
     script.onload = () => {
-      (window as any).kakao.maps.load(() => {
-        initMap()
-        resolve()
+      ;(window as any).kakao.maps.load(() => {
+        nextTick(() => { initMap(); resolve() })
       })
+    }
+    script.onerror = () => {
+      console.error('카카오맵 SDK 로드 실패')
+      resolve()
     }
     document.head.appendChild(script)
   })
@@ -58,8 +69,15 @@ let geocoder: any = null
 let infowindow: any = null
 
 function initMap() {
-  if (!mapRef.value) return
+  if (!mapRef.value) {
+    console.error('mapRef not ready')
+    return
+  }
   const kakao = (window as any).kakao
+  if (!kakao?.maps?.Map) {
+    console.error('kakao.maps not ready')
+    return
+  }
 
   map = new kakao.maps.Map(mapRef.value, {
     center: new kakao.maps.LatLng(37.5665, 126.9780), // 서울 중심
