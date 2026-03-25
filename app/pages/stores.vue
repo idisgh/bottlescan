@@ -42,21 +42,17 @@ function loadKakaoMap() {
       return
     }
 
-    // 이미 스크립트 로딩 중인 경우
-    if (kakao?.maps && !kakao.maps.Map) {
-      kakao.maps.load(() => { initMap(); resolve() })
-      return
-    }
-
     const script = document.createElement('script')
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${config.public.kakaoJsKey}&libraries=services&autoload=false`
+    // autoload=true (기본값) — 스크립트 로드 완료 시점에 바로 사용 가능
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${config.public.kakaoJsKey}&libraries=services`
     script.onload = () => {
-      ;(window as any).kakao.maps.load(() => {
-        nextTick(() => { initMap(); resolve() })
+      nextTick(() => {
+        initMap()
+        resolve()
       })
     }
-    script.onerror = () => {
-      console.error('카카오맵 SDK 로드 실패')
+    script.onerror = (e) => {
+      console.error('카카오맵 SDK 로드 실패 — 도메인 등록 확인 필요', e)
       resolve()
     }
     document.head.appendChild(script)
