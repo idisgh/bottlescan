@@ -75,7 +75,7 @@ function onClickOutside() { showUserMenu.value = false }
             <div class="w-7 h-7 rounded-full bg-bs-gold/20 flex items-center justify-center text-xs font-bold text-bs-gold">
               {{ nickname.charAt(0) || 'U' }}
             </div>
-            <span class="hidden sm:block text-sm text-bs-text-secondary max-w-[80px] truncate">{{ nickname }}</span>
+            <span class="hidden sm:block text-sm text-bs-text-secondary">{{ nickname }}</span>
             <span class="text-bs-text-tertiary text-xs">▾</span>
           </button>
 
