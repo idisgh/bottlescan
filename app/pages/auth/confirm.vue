@@ -14,6 +14,19 @@ onMounted(async () => {
       type: type as any,
     })
     if (!error) {
+      // 닉네임 미설정 확인
+      const { data: { user } } = await client.auth.getUser()
+      if (user) {
+        const { data: profile } = await client
+          .from('profiles')
+          .select('nickname')
+          .eq('id', user.id)
+          .single()
+        if (!profile?.nickname || profile.nickname === 'User') {
+          router.replace('/setup-profile')
+          return
+        }
+      }
       router.replace(next)
       return
     }
